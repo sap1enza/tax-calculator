@@ -9,6 +9,7 @@ class TaxTest < Minitest::Test
     Tax::Sales::Objects::OrderItem
     Tax::Sales::Objects::Order
     Tax::Sales::Objects::Receipt
+    Tax::Sales::Repositories::ProductRepository
     Tax::Sales::Basic
     Tax::Sales::ImportDuty
   ].freeze

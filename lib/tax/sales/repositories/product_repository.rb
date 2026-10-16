@@ -9,13 +9,13 @@ module Tax
 
         DATA_DIR = File.join(Tax::ROOT, "data")
 
-        def self.load
-          categories = read("product_categories.csv").to_h do |row|
+        def self.load(data_dir = DATA_DIR)
+          categories = read(data_dir, "product_categories.csv").to_h do |row|
             category = Objects::ProductCategory.new(**Parsers::ProductCategoryParser.call(row))
             [category.id, category]
           end
 
-          products = read("products.csv").map do |row|
+          products = read(data_dir, "products.csv").map do |row|
             attributes = Parsers::ProductParser.call(row)
             category_id = attributes.delete(:category_id)
             category = categories.fetch(category_id) { raise NotFoundError, "Unknown category: #{category_id}" }
@@ -27,8 +27,8 @@ module Tax
           raise InvalidDataError, "Invalid catalog data: #{e.message}"
         end
 
-        def self.read(filename)
-          CSV.foreach(File.join(DATA_DIR, filename), headers: true)
+        def self.read(data_dir, filename)
+          CSV.foreach(File.join(data_dir, filename), headers: true)
         end
 
         private_class_method :read

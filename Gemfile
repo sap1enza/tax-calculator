@@ -6,3 +6,8 @@ ruby file: ".ruby-version"
 
 gem "bigdecimal"
 gem "csv"
+
+group :test do
+  gem "minitest"
+  gem "rake"
+end

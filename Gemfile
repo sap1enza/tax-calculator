@@ -8,6 +8,7 @@ gem "bigdecimal"
 gem "csv"
 
 group :test do
+  gem "faker"
   gem "minitest"
   gem "rake"
 end

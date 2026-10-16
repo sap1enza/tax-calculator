@@ -85,6 +85,7 @@ product_id,quantity
 - **Rates are combined before rounding.** A taxable imported product is taxed at 15% and rounded once. With the given data this matches rounding each tax separately.
 - **Money is `BigDecimal`**, never `Float`, to avoid representation errors.
 - **One order per run.** `bin/receipt` takes exactly one CSV path.
+- **Catalog data is validated on load.** Prices must be positive and ids must be unique in both catalog files; otherwise the run stops with an error.
 
 ## Project structure
 
@@ -142,3 +143,12 @@ Tax for one unit: `CalculatorService` asks each rule (`Basic`, `ImportDuty`) whe
 - Replace `data/` with a database: `ProductRepository` is the only class that reads CSV, so it is the only one to change.
 - Replace the objects with ORM models: the objects folder holds plain value objects with the same attribute names a table would have.
 - Drop the parsers if input no longer arrives as CSV: they only translate raw strings into typed attributes.
+
+## Gaps
+
+Future gaps to be closed, not addressed due to restricting code to an MVP without spending too much time on later increments:
+
+- **Category exemption is not enforced.** A product in an exempt category (book, food) can still be set `basic_sales_tax_exempt=false` and be taxed. The challenge says books and food are always exempt, so the override could be limited to non-exempt categories.
+- **Prices with more than two decimals** (e.g. `0.001`) are accepted and display as `0.00`. The parser could enforce a scale of two.
+- **Whitespace around ids** (`" 1"`) is not stripped and results in "Unknown product".
+- **An empty (0-byte) order file** produces an empty receipt rather than an error.

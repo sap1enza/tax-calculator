@@ -28,6 +28,10 @@ module Factories
 
     Tax::Sales::Objects::Product.new(**defaults, **overrides)
   end
+
+  def build_order_item(**overrides)
+    Tax::Sales::Objects::OrderItem.new(product: build_product, quantity: 1, **overrides)
+  end
 end
 
 Minitest::Test.include Factories

@@ -6,6 +6,9 @@ class TaxTest < Minitest::Test
   CONSTANTS = %w[
     Tax::Sales::Objects::ProductCategory
     Tax::Sales::Objects::Product
+    Tax::Sales::Objects::OrderItem
+    Tax::Sales::Objects::Order
+    Tax::Sales::Objects::Receipt
     Tax::Sales::Basic
     Tax::Sales::ImportDuty
   ].freeze

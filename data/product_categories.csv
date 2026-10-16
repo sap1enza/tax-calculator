@@ -1,0 +1,6 @@
+id,name,basic_sales_tax_exempt
+1,book,true
+2,medical,false
+3,food,true
+4,music,false
+5,cosmetics,false

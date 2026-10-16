@@ -21,4 +21,6 @@ require_relative "tax/sales/parsers/order_parser"
 require_relative "tax/sales/repositories/product_repository"
 require_relative "tax/sales/basic"
 require_relative "tax/sales/import_duty"
-
+require_relative "tax/sales/services/calculator_service"
+require_relative "tax/sales/services/order_import_service"
+require_relative "tax/sales/services/receipt_formatter_service"

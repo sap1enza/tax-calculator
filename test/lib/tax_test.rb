@@ -17,6 +17,9 @@ class TaxTest < Minitest::Test
     Tax::Sales::Repositories::ProductRepository
     Tax::Sales::Basic
     Tax::Sales::ImportDuty
+    Tax::Sales::Services::CalculatorService
+    Tax::Sales::Services::OrderImportService
+    Tax::Sales::Services::ReceiptFormatterService
   ].freeze
 
   def test_error_inherits_from_standard_error

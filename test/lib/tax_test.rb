@@ -9,6 +9,11 @@ class TaxTest < Minitest::Test
     Tax::Sales::Objects::OrderItem
     Tax::Sales::Objects::Order
     Tax::Sales::Objects::Receipt
+    Tax::Sales::Parsers::Types
+    Tax::Sales::Parsers::ProductCategoryParser
+    Tax::Sales::Parsers::ProductParser
+    Tax::Sales::Parsers::OrderItemParser
+    Tax::Sales::Parsers::OrderParser
     Tax::Sales::Repositories::ProductRepository
     Tax::Sales::Basic
     Tax::Sales::ImportDuty

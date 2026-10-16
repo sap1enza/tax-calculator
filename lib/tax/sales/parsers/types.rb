@@ -18,8 +18,8 @@ module Tax
           optional_boolean(value) || false
         end
 
-        def decimal(value)
-          BigDecimal(value)
+        def positive_decimal(value)
+          BigDecimal(value).tap { |number| raise ArgumentError, "must be positive: #{value}" unless number.positive? }
         end
 
         def positive_integer(value)

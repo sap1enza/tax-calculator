@@ -10,10 +10,9 @@ module Tax
         DATA_DIR = File.join(Tax::ROOT, "data")
 
         def self.load(data_dir = DATA_DIR)
-          categories = read(data_dir, "product_categories.csv").to_h do |row|
-            category = Objects::ProductCategory.new(**Parsers::ProductCategoryParser.call(row))
-            [category.id, category]
-          end
+          categories = index(read(data_dir, "product_categories.csv").map do |row|
+            Objects::ProductCategory.new(**Parsers::ProductCategoryParser.call(row))
+          end)
 
           products = read(data_dir, "products.csv").map do |row|
             attributes = Parsers::ProductParser.call(row)
@@ -22,16 +21,23 @@ module Tax
             Objects::Product.new(**attributes, category:)
           end
 
-          new(products)
+          new(index(products).values)
         rescue ArgumentError, TypeError, KeyError, CSV::MalformedCSVError, Errno::ENOENT, NotFoundError => e
           raise InvalidDataError, "Invalid catalog data: #{e.message}"
         end
 
         def self.read(data_dir, filename)
-          CSV.foreach(File.join(data_dir, filename), headers: true)
+          CSV.foreach(File.join(data_dir, filename), headers: true, encoding: "bom|utf-8")
         end
 
-        private_class_method :read
+        def self.index(records)
+          records.each_with_object({}) do |record, by_id|
+            raise InvalidDataError, "Duplicate id: #{record.id}" if by_id.key?(record.id)
+
+            by_id[record.id] = record
+          end
+        end
+        private_class_method :read, :index
 
         def initialize(products)
           @products = products.to_h { |product| [product.id, product] }

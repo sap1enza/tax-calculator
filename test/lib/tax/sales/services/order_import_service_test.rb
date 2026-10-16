@@ -36,6 +36,12 @@ module Tax
           assert_equal "Line 2: must be positive: 0", error.message
         end
 
+        def test_ignores_a_utf8_bom
+          order = import("\uFEFFproduct_id,quantity\n1,1\n")
+
+          assert_equal [@book], order.items.map(&:product)
+        end
+
         def test_raises_for_a_missing_column
           assert_raises(OrderImportService::InvalidOrderError) { import("product_id\n1\n") }
         end

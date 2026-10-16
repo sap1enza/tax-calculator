@@ -38,6 +38,12 @@ module Tax
           assert_equal "book", ProductRepository.load.find("1").name
         end
 
+        def test_load_ignores_a_utf8_bom
+          with_data_dir(categories: "\uFEFF#{CATEGORIES}", products: "\uFEFF#{PRODUCTS}") do |dir|
+            assert_equal "book", ProductRepository.load(dir).find("1").name
+          end
+        end
+
         def test_load_raises_for_an_unknown_category
           with_data_dir(products: "#{PRODUCTS}3,9,ghost,,false,1.00\n") do |dir|
             error = assert_raises(ProductRepository::InvalidDataError) { ProductRepository.load(dir) }
@@ -48,6 +54,28 @@ module Tax
 
         def test_load_raises_for_invalid_values
           with_data_dir(products: "#{PRODUCTS}3,1,bad,maybe,false,1.00\n") do |dir|
+            assert_raises(ProductRepository::InvalidDataError) { ProductRepository.load(dir) }
+          end
+        end
+
+        def test_load_raises_for_a_duplicate_product_id
+          with_data_dir(products: "#{PRODUCTS}1,1,another book,,false,5.00\n") do |dir|
+            error = assert_raises(ProductRepository::InvalidDataError) { ProductRepository.load(dir) }
+
+            assert_match(/Duplicate id: 1/, error.message)
+          end
+        end
+
+        def test_load_raises_for_a_duplicate_category_id
+          with_data_dir(categories: "#{CATEGORIES}1,food,true\n") do |dir|
+            error = assert_raises(ProductRepository::InvalidDataError) { ProductRepository.load(dir) }
+
+            assert_match(/Duplicate id: 1/, error.message)
+          end
+        end
+
+        def test_load_raises_for_a_non_positive_price
+          with_data_dir(products: "#{PRODUCTS}3,1,free book,,false,0\n") do |dir|
             assert_raises(ProductRepository::InvalidDataError) { ProductRepository.load(dir) }
           end
         end

@@ -14,7 +14,7 @@ module Tax
         end
 
         def call
-          attributes = Parsers::OrderParser.call(CSV.foreach(@path, headers: true))
+          attributes = Parsers::OrderParser.call(CSV.foreach(@path, headers: true, encoding: "bom|utf-8"))
           items = attributes.fetch(:items).each.with_index(2).map { |item, line| build_item(item, line) }
           Objects::Order.new(items:)
         rescue ArgumentError, CSV::MalformedCSVError, Errno::ENOENT => e

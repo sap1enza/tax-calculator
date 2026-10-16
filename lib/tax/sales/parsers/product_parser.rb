@@ -13,7 +13,7 @@ module Tax
             name: row.fetch("name"),
             basic_sales_tax_exempt: Types.optional_boolean(row.fetch("basic_sales_tax_exempt")),
             imported: Types.boolean(row.fetch("imported")),
-            price: Types.decimal(row.fetch("price"))
+            price: Types.positive_decimal(row.fetch("price"))
           }
         end
       end

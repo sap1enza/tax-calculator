@@ -34,13 +34,18 @@ module Tax
           refute Types.optional_boolean("false")
         end
 
-        def test_decimal_returns_a_big_decimal
-          assert_equal BigDecimal("12.49"), Types.decimal("12.49")
-          assert_kind_of BigDecimal, Types.decimal("12.49")
+        def test_positive_decimal_returns_a_big_decimal
+          assert_equal BigDecimal("12.49"), Types.positive_decimal("12.49")
+          assert_kind_of BigDecimal, Types.positive_decimal("12.49")
         end
 
-        def test_decimal_rejects_non_numbers
-          assert_raises(ArgumentError) { Types.decimal("abc") }
+        def test_positive_decimal_rejects_non_numbers
+          assert_raises(ArgumentError) { Types.positive_decimal("abc") }
+        end
+
+        def test_positive_decimal_rejects_zero_and_negatives
+          assert_raises(ArgumentError) { Types.positive_decimal("0") }
+          assert_raises(ArgumentError) { Types.positive_decimal("-1.00") }
         end
 
         def test_positive_integer_parses_whole_numbers

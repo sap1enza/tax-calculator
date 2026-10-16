@@ -32,6 +32,11 @@ module Tax
           assert_raises(ArgumentError) { ProductParser.call(ROW.merge("price" => "free")) }
         end
 
+        def test_raises_for_a_non_positive_price
+          assert_raises(ArgumentError) { ProductParser.call(ROW.merge("price" => "0")) }
+          assert_raises(ArgumentError) { ProductParser.call(ROW.merge("price" => "-9.75")) }
+        end
+
         def test_raises_for_a_missing_column
           assert_raises(KeyError) { ProductParser.call(ROW.except("price")) }
         end

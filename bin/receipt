@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler/setup"
+require_relative "../lib/tax"
+
+abort "Usage: bin/receipt ORDER_CSV" unless ARGV.size == 1
+
+begin
+  repository = Tax::Sales::Repositories::ProductRepository.load
+  order = Tax::Sales::Services::OrderImportService.call(ARGV.first, repository:)
+  receipt = Tax::Sales::Objects::Receipt.new(order:)
+  puts Tax::Sales::Services::ReceiptFormatterService.call(receipt)
+rescue Tax::Error => e
+  abort "Error: #{e.message}"
+end
